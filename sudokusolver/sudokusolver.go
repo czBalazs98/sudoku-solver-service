@@ -4,17 +4,16 @@ import "fmt"
 
 // Check if a number can be inserted to the given position in a sudoku table
 func isSafe(sudoku [][]int, row int, col int, num int) bool {
-	
 	// Checking row for match
 	for i := 0; i < len(sudoku); i++ {
-		if sudoku[row][i] == num {
+		if sudoku[row][i] == num && i != col {
 			return false
 		}
 	}
 
 	// Checking column for match
 	for i := 0; i < len(sudoku); i++ {
-		if sudoku[i][col] == num {
+		if sudoku[i][col] == num && i != row {
 			return false
 		}
 	}
@@ -24,7 +23,7 @@ func isSafe(sudoku [][]int, row int, col int, num int) bool {
 	boxColStart := col - col % 3
 	for i := boxRowStart; i < boxRowStart + 3; i++ {
 		for j := boxColStart; j < boxColStart + 3; j++ {
-			if sudoku[i][j] == num {
+			if sudoku[i][j] == num && i != row && j != col {
 				return false
 			}
 		}
@@ -83,4 +82,25 @@ func PrintSudoku(sudoku [][]int) {
 		}
 		fmt.Println()
 	}
+}
+
+// Check if the parameter is a valid sudoku
+func IsValidSudoku(sudoku [][]int) bool {
+	if len(sudoku) != 9 {
+		return false
+	}
+
+	for i := range sudoku {
+		if len(sudoku[i]) != 9 {
+			return false
+		}
+
+		for j := range sudoku[i] {
+			if !isSafe(sudoku, i, j, sudoku[i][j]) && sudoku[i][j] != 0 {
+				return false
+			}
+		}
+	}
+
+	return true
 }

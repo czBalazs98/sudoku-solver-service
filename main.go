@@ -1,27 +1,45 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+
 	"bczmarko/sudoku-solver/sudokusolver"
 )
 
+type sudokuDto struct {
+	Sudoku [][]int `json:"sudoku"`
+}
+
 func main() {
-	sudoku := [][]int {
-		{ 3, 0, 6, 5, 0, 8, 4, 0, 0 },
-        { 5, 2, 0, 0, 0, 0, 0, 0, 0 },
-        { 0, 8, 7, 0, 0, 0, 0, 3, 1 },
-        { 0, 0, 3, 0, 1, 0, 0, 8, 0 },
-        { 9, 0, 0, 8, 6, 3, 0, 0, 5 },
-        { 0, 5, 0, 0, 9, 0, 6, 0, 0 },
-        { 1, 3, 0, 0, 0, 0, 2, 5, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 7, 4 },
-        { 0, 0, 5, 2, 0, 6, 3, 0, 0 },
+	router := gin.Default()
+	router.POST("/solve-sudoku", solveSudoku)
+
+	router.Run("localhost:8080")
+}
+
+func solveSudoku(c *gin.Context) {
+	var sudoku sudokuDto
+
+	// Check if request body can be binded
+	if err := c.BindJSON(&sudoku); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Request is not valid"})
+		return
 	}
 
-	if sudokusolver.SolveSudoku(sudoku) {
-		fmt.Println("Solved sudoku:")
-		sudokusolver.PrintSudoku(sudoku)
-	} else {
-		fmt.Println("Sudoku cannot be solved")
+	// Check if the sudoku is valid
+	if !sudokusolver.IsValidSudoku(sudoku.Sudoku) {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Sudoku is not valid"})
+		return
 	}
+
+	// Check if the sudoku can be solved
+	if !sudokusolver.SolveSudoku(sudoku.Sudoku) {
+		c.IndentedJSON(http.StatusOK, gin.H{"message": "Sudoku cannot be solved"})
+		return
+	}
+
+	// Solved sudoku in response
+	c.IndentedJSON(http.StatusOK, sudoku)	
 }
