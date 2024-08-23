@@ -33,6 +33,7 @@ func setUp() {
 	}
 }
 
+// Test case: A value can be safely inserted into the Sudoku table
 func TestIsSafe(t *testing.T) {
 	setUp()
 
@@ -44,6 +45,7 @@ func TestIsSafe(t *testing.T) {
 	}
 }
 
+// Test case: A value cannot be inserted safely into the Sudoku table
 func TestIsSafeNotSafe(t *testing.T) {
 	setUp()
 
@@ -55,6 +57,7 @@ func TestIsSafeNotSafe(t *testing.T) {
 	}
 }
 
+// Test case: Validating valid Sudoku
 func TestIsValidSudoku(t *testing.T) {
 	setUp()
 
@@ -66,6 +69,7 @@ func TestIsValidSudoku(t *testing.T) {
 	}
 }
 
+// Test case: Validating invalid Sudoku
 func TestIsValidSudokuNotValid(t *testing.T) {
 	setUp()
 	testSudoku[2][0] = 4
@@ -78,6 +82,7 @@ func TestIsValidSudokuNotValid(t *testing.T) {
 	}
 }
 
+// Test case: Solve the Sudoku
 func TestSolveSudoku(t *testing.T) {
 	setUp()
 
@@ -89,6 +94,7 @@ func TestSolveSudoku(t *testing.T) {
 	}
 }
 
+// Test case: Sudoku cannot be solved
 func TestSolveSudokuNotSolvable(t *testing.T) {
 	setUp()
 	testSudoku[2][0] = 4
