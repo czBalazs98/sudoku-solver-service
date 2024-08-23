@@ -16,7 +16,7 @@ func main() {
 	router := gin.Default()
 	router.POST("/solve-sudoku", solveSudoku)
 
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }
 
 func solveSudoku(c *gin.Context) {
